@@ -1,0 +1,21 @@
+{
+  /*
+   * 프로젝트 루트 TypeScript 설정 파일
+   *
+   * 이 파일은 "Project References" 패턴을 사용하여 프로젝트를 여러 하위 프로젝트로 분리합니다.
+   * - files: [] - 이 파일 자체는 직접 컴파일할 파일이 없음
+   * - references - 하위 프로젝트들을 참조
+   *   - tsconfig.app.json: 애플리케이션 소스 코드 (src 폴더)
+   *   - tsconfig.node.json: Node.js 환경 파일 (vite.config.ts 등)
+   *
+   * 이렇게 분리하면:
+   * 1. 빌드 성능 향상 (병렬 빌드 가능)
+   * 2. 각 환경에 맞는 설정 적용 (브라우저 vs Node.js)
+   * 3. 타입 체킹 범위를 명확하게 분리
+   */
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

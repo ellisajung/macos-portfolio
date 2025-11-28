@@ -1,0 +1,43 @@
+{
+  /*
+   * Node.js 환경용 TypeScript 설정 파일
+   *
+   * 이 파일은 Node.js 환경에서 실행되는 파일들을 위한 설정입니다.
+   * 주로 빌드 도구 설정 파일들이 포함됩니다.
+   *
+   * 주요 설정:
+   * - target: ES2023 - Node.js 최신 버전 지원
+   * - lib: ES2023 - DOM API 제외, Node.js API만 포함
+   * - types: node - Node.js 타입 정의 포함
+   * - include: vite.config.ts - Vite 설정 파일만 포함
+   *
+   * 브라우저 환경(tsconfig.app.json)과 분리된 이유:
+   * 1. Node.js와 브라우저는 서로 다른 API 제공
+   * 2. 빌드 도구는 DOM API 불필요
+   * 3. 각 환경에 맞는 타입 체킹 가능
+   */
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["vite.config.ts"]
+}

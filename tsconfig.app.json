@@ -1,0 +1,79 @@
+{
+  /*
+   * 애플리케이션 코드용 TypeScript 설정 파일
+   *
+   * 이 파일은 React 애플리케이션의 소스 코드(src 폴더)를 위한 설정입니다.
+   *
+   * 주요 설정:
+   * - target: ES2022 - 최신 JavaScript 기능 사용 (최신 브라우저 지원)
+   * - lib: DOM, DOM.Iterable - 브라우저 환경 타입 정의 포함
+   * - jsx: react-jsx - React 17+ 새로운 JSX 변환 사용
+   * - moduleResolution: bundler - Vite 같은 번들러 환경에 최적화
+   * - baseUrl & paths - 절대 경로 import 설정 (#로 시작하는 경로)
+   *   예: import { Button } from '#components/Button'
+   * - strict: true - 엄격한 타입 체킹으로 버그 예방
+   */
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Path Aliases - 절대 경로 import 설정
+     *
+     * baseUrl: 모든 상대 경로의 기준점 설정
+     * - "." = 현재 디렉토리 (tsconfig.app.json이 있는 위치)
+     * - 결과: /Users/.../macos_portfolio/가 기준점
+     *
+     * paths: 경로 별칭 패턴 정의 (baseUrl이 없으면 paths는 무시됨!)
+     * - "#*": 패턴 매칭 (왼쪽)
+     *   - "#": 고정된 접두사 (원하는 문자 사용 가능: @, ~, # 등)
+     *   - "*": 와일드카드 = "모든 것"
+     *   - 의미: "#으로 시작하는 모든 경로"
+     *
+     * - ["src/*"]: 실제 경로 (오른쪽)
+     *   - "src/": baseUrl 기준으로 src 폴더
+     *   - "*": 왼쪽 *에 매칭된 부분을 여기에 대입
+     *   - 배열인 이유: 여러 경로를 fallback으로 지정 가능
+     *
+     * 동작 예시:
+     * import Button from '#components/Button'
+     * 1. "#components/Button"을 패턴 "#*"와 매칭
+     * 2. *에 해당하는 부분 = "components/Button"
+     * 3. "src/*"에서 *를 "components/Button"로 치환
+     * 4. 최종 경로: "./src/components/Button"
+     *
+     * 패턴 특수문자:
+     * @: 많은 프로젝트에서 사용 (일반적)
+     * ~: Webpack에서 node_modules를 의미하는 경우가 많아 혼란 가능
+     * #:
+     *   - Node.js 18+의 package.json "imports" 필드와 동일한 컨벤션
+     *   - 내부 모듈임을 명확히 표시
+     *   - 최근 표준으로 자리잡는 추세
+     */
+    "baseUrl": ".",
+    "paths": {
+      "#*": ["src/*"]
+    },
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
