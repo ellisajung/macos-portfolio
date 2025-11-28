@@ -1,0 +1,731 @@
+/* ==========================================================================
+   폰트 및 Tailwind CSS 임포트
+   ========================================================================== */
+
+/* Google Fonts: Georama (sans-serif), Roboto Mono (monospace) */
+@import url("https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
+/* Tailwind CSS 기본 스타일 (Tailwind 4) */
+@import "tailwindcss";
+
+/* ==========================================================================
+   전역 스타일 설정
+   ========================================================================== */
+
+/* html, body: 전체 화면 설정 및 배경 이미지 */
+html,
+body {
+  width: 100dvw; /* 동적 뷰포트 너비 (모바일 브라우저 대응) */
+  overflow: hidden; /* 스크롤 방지 */
+  height: 100dvh; /* 동적 뷰포트 높이 */
+  background-image: url("/images/wallpaper.png"); /* macOS 배경화면 */
+  background-size: cover; /* 배경 이미지가 화면을 완전히 덮도록 */
+  background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+  background-position: center; /* 배경 이미지 중앙 정렬 */
+}
+
+/* ==========================================================================
+   Tailwind CSS Directives(At-rules) 정의
+   ========================================================================== */
+
+/* ==========================================================================
+   @theme(Tailwind 4):
+        - 커스텀 테마/디자인 토큰 정의
+        - CSS 변수 형태로 폰트, 색상, 브레이크포인트 등의 기존 유틸 클래스를 확장
+        - 반드시 사전에 정의된 namespaces를 사용하여 확장해야 함
+        - 사용 이유:
+            - font-georama, font-roboto처럼 의미 있는 이름으로 사용
+            - 폰트 변경 시 @theme만 수정하면 전체 적용
+        - 정의 예시:
+            @theme {
+                --font-georama: "Georama", sans-serif;
+            }
+        - 사용 예시:
+            <p className="font-georama">일반 텍스트</p>
+   ========================================================================== */
+
+@theme {
+  /* 커스텀 폰트 패밀리 정의 */
+  --font-georama: "Georama", sans-serif; /* 일반 텍스트용 폰트 */
+  --font-roboto: "Roboto Mono", monospace; /* 코드/터미널용 폰트 */
+
+  /* 커스텀 브레이크포인트 */
+  --breakpoint-3xl: 1920px; /* 3xl 화면 크기 (초대형 모니터) */
+}
+
+/* ==========================================================================
+   @utility(Tailwind 4):
+        - 새로운 커스텀 유틸리티 클래스 정의
+        - 재사용 가능한 단위로 유틸 클래스들을 묶어 정의
+        - @theme처럼 사전에 정의된 namespace가 없어 자유롭게 네이밍 가능
+   ========================================================================== */
+
+/* flex-center: 가로/세로 중앙 정렬 (flex) */
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
+
+/* col-center: 가로/세로 중앙 정렬 (flex-col) */
+@utility col-center {
+  @apply flex flex-col items-center justify-center;
+}
+
+/* abs-center: absolute 포지션에서 완전 중앙 정렬 */
+@utility abs-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+/* ==========================================================================
+   Tailwind CSS 레이어 시스템 정의
+        - @layer base {}: base 레이어 정의
+        - @layer components {}: components 레이어 정의
+        - @layer utilities {}: utilities 레이어 정의
+   ========================================================================== */
+
+/* ==========================================================================
+   @layer base: 
+        - 기본 HTML 요소 스타일 정의
+        - 태그 선택자만 사용 (클래스/ID 아님)
+        - 프로젝트 전역에 적용
+   ========================================================================== */
+
+@layer base {
+  /* main: 메인 컨테이너 (전체 화면, 스크롤 방지) */
+  main {
+    @apply w-dvw h-dvh overflow-hidden;
+    /* w-dvw: 동적 뷰포트 너비 100% */
+    /* h-dvh: 동적 뷰포트 높이 100% */
+    /* overflow-hidden: 스크롤바 숨김 */
+  }
+
+  /* nav: macOS 상단 메뉴바 스타일 */
+  nav {
+    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
+    /* bg-white/50: 50% 투명도의 흰색 배경 */
+    /* backdrop-blur-3xl: 뒷배경 블러 효과 (유리 효과) */
+    /* select-none: 텍스트 선택 방지 */
+
+    /* 메뉴바 섹션 (좌측/우측) */
+    div {
+      @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
+
+      /* 우측 섹션: 모바일에서 숨김 */
+      &:last-child {
+        @apply max-sm:hidden;
+      }
+    }
+
+    /* 메뉴 항목 리스트 */
+    ul {
+      @apply flex items-center gap-5 max-sm:hidden;
+
+      /* 메뉴 텍스트 */
+      p {
+        @apply text-sm cursor-pointer hover:underline transition-all;
+      }
+    }
+
+    /* 시계/시간 표시 */
+    time {
+      @apply text-sm font-medium text-black;
+    }
+  }
+}
+
+/* ==========================================================================
+   @layer components:
+        - 재사용 가능한 UI 컴포넌트의 스타일을 정의
+        - 정의 방식:
+            @layer components {
+                #컴포넌트ID {
+                    @apply // 기본 스타일
+                }
+    
+                .컴포넌트클래스 {
+                    @apply // 스타일
+                }
+            }
+   ========================================================================== */
+
+@layer components {
+  /* icon: 일반 아이콘 호버 효과 */
+  .icon {
+    @apply p-1 hover:bg-gray-200 rounded hover:cursor-default;
+  }
+
+  /* ==========================================================================
+     #welcome: 환영 화면 (화면 중앙에 표시)
+     ========================================================================== */
+  #welcome {
+    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none max-sm:h-screen max-sm:w-full max-sm:px-10;
+
+    /* 작은 화면 경고 메시지 */
+    .small-screen {
+      @apply sm:hidden m-7 bg-red-300/20 backdrop-blur-lg p-3 rounded-md absolute top-10;
+
+      p {
+        @apply flex-1 text-[16px] text-center font-roboto text-gray-400;
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #dock: macOS 하단 독 (Dock)
+     ========================================================================== */
+  #dock {
+    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
+
+    /* 독 컨테이너 (반투명 배경) */
+    .dock-container {
+      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+    }
+
+    /* 독 아이콘 툴팁 (앱 이름 표시) */
+    .tooltip {
+      @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-md !bg-blue-200 !text-blue-900 !shadow-2xl;
+    }
+
+    /* 독 아이콘 스타일 */
+    .dock-icon {
+      @apply size-14 3xl:size-20 cursor-pointer; /* 3xl 화면에서 크기 증가 */
+
+      img {
+        @apply object-cover object-center;
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #window-controls: 윈도우 컨트롤 버튼 (닫기, 최소화, 최대화)
+     ========================================================================== */
+  #window-controls {
+    @apply flex gap-2;
+
+    /* 닫기 버튼 (빨간색) */
+    .close {
+      @apply size-3.5 rounded-full bg-[#ff6157] cursor-pointer;
+    }
+
+    /* 최소화 버튼 (노란색) */
+    .minimize {
+      @apply size-3.5 rounded-full bg-[#ffc030];
+    }
+
+    /* 최대화 버튼 (초록색) */
+    .maximize {
+      @apply size-3.5 rounded-full bg-[#2acb42];
+    }
+  }
+
+  /* ==========================================================================
+     #window-header: 윈도우 헤더 (상단 타이틀바)
+     ========================================================================== */
+  #window-header {
+    @apply flex items-center justify-between px-4 py-3 rounded-t-lg bg-gray-50 border-b border-gray-200 select-none text-sm text-gray-400;
+  }
+
+  /* ==========================================================================
+     #safari: Safari 브라우저 윈도우
+     ========================================================================== */
+  #safari {
+    @apply w-4xl absolute top-40 left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 검색바 (주소창) */
+    .search {
+      @apply flex items-center gap-3 w-2/3 bg-white border border-gray-300 rounded-lg px-3 py-2;
+
+      input {
+        @apply placeholder:text-gray-400;
+      }
+    }
+
+    /* 블로그 콘텐츠 영역 */
+    .blog {
+      @apply bg-white p-10 max-w-3xl mx-auto;
+
+      /* 블로그 제목 */
+      h2 {
+        @apply text-xl font-bold text-pink-600 mb-10;
+      }
+
+      /* 블로그 포스트 항목 */
+      .blog-post {
+        @apply grid grid-cols-12 space-x-5;
+
+        /* 썸네일 이미지 */
+        img {
+          @apply size-full rounded-md object-cover;
+        }
+
+        /* 포스트 텍스트 콘텐츠 */
+        .content {
+          @apply col-span-10 space-y-3;
+
+          /* 날짜/메타정보 */
+          p {
+            @apply text-xs text-gray-500;
+          }
+
+          /* 포스트 제목 */
+          h3 {
+            @apply font-semibold text-base text-gray-800;
+          }
+
+          /* 더보기 링크 */
+          a {
+            @apply text-blue-600 text-xs hover:underline flex items-center gap-3;
+          }
+        }
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #terminal: 터미널 윈도우 (기술 스택 표시)
+     ========================================================================== */
+  #terminal {
+    @apply w-xl absolute top-32 left-1/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 윈도우 제목 */
+    h2 {
+      @apply font-bold text-sm text-center w-full;
+    }
+
+    /* 기술 스택 리스트 영역 */
+    .techstack {
+      @apply text-sm font-roboto p-5; /* Roboto Mono 폰트 사용 (터미널 스타일) */
+
+      /* 섹션 라벨 */
+      .label {
+        @apply flex items-center ms-10 mt-7;
+      }
+
+      /* 기술 스택 목록 콘텐츠 */
+      .content {
+        @apply py-5 my-5 border-y border-dashed space-y-1;
+
+        li {
+          /* 체크 아이콘 */
+          .check {
+            @apply text-[#00A154] w-5; /* 초록색 체크마크 */
+          }
+
+          /* 카테고리 제목 */
+          h3 {
+            @apply font-semibold text-[#00A154] w-32 ms-5;
+          }
+
+          /* 기술 항목 리스트 */
+          ul {
+            @apply flex items-center gap-3;
+          }
+        }
+      }
+
+      /* 하단 주석/각주 */
+      .footnote {
+        @apply text-[#00A154] space-y-1;
+
+        p {
+          @apply flex items-center;
+
+          svg {
+            @apply w-5 me-5;
+          }
+        }
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #contact: 연락처 윈도우
+     ========================================================================== */
+  #contact {
+    @apply max-w-2xl absolute top-60 left-5/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 윈도우 제목 */
+    h2 {
+      @apply font-bold text-sm text-center w-full;
+    }
+
+    /* 섹션 제목 */
+    h3 {
+      @apply text-xl font-semibold;
+    }
+
+    /* 연락처 항목 리스트 */
+    ul {
+      @apply flex items-center gap-3;
+
+      /* 연락처 카드 */
+      li {
+        @apply rounded-lg p-3 w-60 hover:-translate-y-0.5 hover:scale-105 origin-center transition-all duration-300;
+
+        /* 링크 영역 */
+        a {
+          @apply space-y-5;
+        }
+
+        /* 연락처 텍스트 */
+        p {
+          @apply font-semibold text-sm text-white;
+        }
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #photos: 사진 앱 윈도우
+     ========================================================================== */
+  #photos {
+    @apply max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 좌측 사이드바 (앨범 목록) */
+    .sidebar {
+      @apply w-3/12 flex-none bg-gray-50 border-r border-gray-200 flex flex-col p-5;
+
+      /* 섹션 제목 */
+      h2 {
+        @apply text-xs font-medium text-gray-400 mb-1;
+      }
+
+      /* 앨범 목록 */
+      ul {
+        li {
+          @apply flex space-y-1 items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors;
+
+          /* 첫 번째 항목 (활성 상태) */
+          &:first-child {
+            @apply bg-blue-100 text-blue-700;
+          }
+
+          /* 앨범 아이콘 */
+          img {
+            @apply w-4;
+          }
+
+          /* 앨범 이름 */
+          p {
+            @apply text-sm font-medium;
+          }
+        }
+      }
+    }
+
+    /* 갤러리 영역 (사진 그리드) */
+    .gallery {
+      @apply p-5;
+
+      /* 사진 그리드 레이아웃 (5x5) */
+      ul {
+        @apply grid grid-cols-5 grid-rows-5 gap-2.5;
+
+        li {
+          /* 사진 이미지 */
+          img {
+            @apply size-full object-cover rounded-lg;
+          }
+
+          /* 첫 번째 사진: 좌측 상단, 3x3 크기 */
+          &:first-child {
+            @apply row-start-1 row-span-3 col-start-1 col-span-3;
+          }
+
+          /* 두 번째 사진: 우측 상단, 2x3 크기 */
+          &:nth-child(2) {
+            @apply row-start-1 row-span-3 col-start-4 col-span-2;
+          }
+
+          /* 세 번째 사진: 우측 하단, 3x2 크기 */
+          &:nth-child(3) {
+            @apply row-start-4 row-span-2 col-start-3 col-span-3;
+          }
+
+          /* 네 번째 사진: 좌측 하단, 2x2 크기 */
+          &:last-child {
+            @apply row-start-4 row-span-2 col-start-1 col-span-2;
+          }
+        }
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #resume: 이력서 윈도우
+     ========================================================================== */
+  #resume {
+    @apply w-fit h-fit absolute top-16 left-7/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 윈도우 헤더 커스터마이징 */
+    #window-header {
+      /* 윈도우 제목 */
+      h2 {
+        @apply font-bold text-sm text-center flex-1;
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #finder: Finder 윈도우 (파일 탐색기)
+     ========================================================================== */
+  #finder {
+    @apply absolute w-3xl left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl;
+
+    /* 좌측 사이드바 (폴더 목록) */
+    .sidebar {
+      @apply w-48 bg-gray-50 border-r border-gray-200 flex flex-col p-5 space-y-3;
+
+      /* 섹션 제목 */
+      h3 {
+        @apply text-xs font-medium text-gray-400 mb-1;
+      }
+
+      /* 폴더 목록 */
+      ul {
+        @apply space-y-1;
+
+        /* 활성 상태 (선택된 폴더) */
+        .active {
+          @apply bg-blue-100 text-blue-700;
+        }
+
+        /* 비활성 상태 */
+        .not-active {
+          @apply text-gray-700 hover:bg-gray-200;
+        }
+
+        /* 폴더 항목 */
+        li {
+          @apply flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors;
+        }
+      }
+    }
+
+    /* 파일/폴더 표시 영역 */
+    .content {
+      @apply flex-1 p-8 bg-white max-w-2xl relative;
+
+      /* 파일/폴더 아이템 */
+      li {
+        @apply absolute flex items-center flex-col gap-3;
+
+        /* 파일/폴더 아이콘 */
+        img {
+          @apply object-contain object-center size-16 relative group-hover:scale-105;
+        }
+
+        /* 파일/폴더 이름 */
+        p {
+          @apply text-sm text-center font-medium w-40;
+        }
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #txtfile: 텍스트 파일 뷰어 윈도우
+     ========================================================================== */
+  #txtfile {
+    @apply w-md absolute top-36 right-32 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 윈도우 제목 */
+    h2 {
+      @apply font-bold text-sm text-center w-full;
+    }
+  }
+
+  /* ==========================================================================
+     #imgfile: 이미지 파일 뷰어 윈도우
+     ========================================================================== */
+  #imgfile {
+    @apply w-xl absolute top-40 left-2/12 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+
+    /* 윈도우 헤더 커스터마이징 */
+    #window-header {
+      /* 파일명 표시 */
+      p {
+        @apply font-bold text-[#5f6266];
+      }
+    }
+
+    /* 이미지 미리보기 영역 */
+    .preview {
+      @apply p-2 bg-gray-200 max-h-[70vh];
+
+      /* 미리보기 이미지 */
+      img {
+        @apply w-full h-fit object-contain object-center;
+      }
+    }
+  }
+
+  /* ==========================================================================
+     #home: 바탕화면 아이콘 영역
+     ========================================================================== */
+  #home {
+    @apply relative z-0 max-sm:hidden;
+
+    /* 바탕화면 아이콘 목록 */
+    ul {
+      li {
+        @apply absolute z-0 select-none flex items-center flex-col;
+
+        /* 아이콘 이미지 */
+        img {
+          @apply group-hover:bg-gray-950/10 p-1 rounded-md; /* 호버 시 어두운 배경 */
+        }
+
+        /* 아이콘 이름 */
+        p {
+          @apply text-sm text-white text-center px-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40; /* 호버 시 파란색 배경 */
+        }
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   @layer utilities:
+        - Tailwind CSS의 기본 유틸리티 클래스와 동일한 우선순위를 가지는 새로운 클래스 정의
+        - Tailwind v3, v4 모두 사용 가능
+        - 순수 CSS 작성 가능
+        - 더 복잡한 스타일 정의 가능
+        - 정의 방식:
+            @layer utilities {
+                .클래스명 {
+                    // CSS 속성
+                }
+            }
+        - 예시:
+            @layer utilities {
+                // === 텍스트 관련 유틸리티 ===
+
+                // 텍스트 그라디언트
+                .text-gradient {
+                    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                // 텍스트 세로쓰기 
+                .text-vertical {
+                    writing-mode: vertical-rl;
+                }
+
+                // 텍스트 말줄임 (2줄) 
+                .line-clamp-2 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                
+                // === 레이아웃 관련 유틸리티 ===
+    
+                // 정사각형 비율 유지 
+                .aspect-square {
+                    aspect-ratio: 1 / 1;
+                }
+
+                // 16:9 비율 유지 
+                .aspect-video {
+                    aspect-ratio: 16 / 9;
+                }
+
+                // 스크롤바 숨김 
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+
+                // 글래스모피즘 효과 
+                .glass {
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                // === 애니메이션 관련 유틸리티 ===
+                // 페이드인 애니메이션
+                .animate-fade-in {
+                    animation: fadeIn 0.5s ease-in;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                // 슬라이드업 애니메이션
+                .animate-slide-up {
+                    animation: slideUp 0.3s ease-out;
+                }
+
+                @keyframes slideUp {
+                    from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                    }
+                    to {
+                    transform: translateY(0);
+                    opacity: 1;
+                    }
+                }
+
+                // === 반응형 유틸리티 ===
+                // 커스텀 그리드 
+                .grid-auto-fit {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                }
+
+                .grid-auto-fill {
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                }
+
+                // Safe area 대응 (iOS) 
+                .safe-top {
+                    padding-top: env(safe-area-inset-top);
+                }
+
+                .safe-bottom {
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+
+                // === 인터랙션 유틸리티 ===
+                // 클릭 방지 
+                .no-click {
+                    pointer-events: none;
+                }
+
+                // 드래그 방지 
+                .no-drag {
+                    user-drag: none;
+                    -webkit-user-drag: none;
+                    user-select: none;
+                    -webkit-user-select: none;
+                }
+
+                // 스무스 스크롤 
+                .scroll-smooth {
+                    scroll-behavior: smooth;
+                }
+
+                // 스냅 스크롤 
+                .snap-x {
+                    scroll-snap-type: x mandatory;
+                }
+
+                .snap-center {
+                    scroll-snap-align: center;
+                }
+            }
+   ========================================================================== */
+
+/* ==========================================================================
+   파일 끝
+   ========================================================================== */
