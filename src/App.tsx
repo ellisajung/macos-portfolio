@@ -1,11 +1,18 @@
+import gsap from "gsap";
+import { Draggable } from "gsap/Draggable";
+gsap.registerPlugin(Draggable);
+
 import { Dock, Navbar, Welcome } from "#components";
+import { TerminalWindow } from "#windows";
 
 const App = () => {
   return (
-    <main className="font-">
+    <main>
       <Navbar />
       <Welcome />
       <Dock />
+
+      <TerminalWindow />
     </main>
   );
 };
