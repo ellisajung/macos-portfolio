@@ -3,6 +3,8 @@ import { Tooltip } from "react-tooltip";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { dockApps } from "#constants";
+import useWindowStore from "#store/window";
+import type { WindowKey } from "#store/window";
 
 /**
  * Dock 컴포넌트
@@ -10,6 +12,10 @@ import { dockApps } from "#constants";
  * 마우스 호버 시 아이콘이 확대되고 위로 올라가는 애니메이션 효과를 제공
  */
 const Dock = () => {
+  const openWindow = useWindowStore((s) => s.openWindow);
+  const closeWindow = useWindowStore((s) => s.closeWindow);
+  const windows = useWindowStore((s) => s.windows);
+
   // Dock 컨테이너 DOM 요소에 대한 참조
   const dockRef = useRef<HTMLDivElement | null>(null);
 
@@ -90,7 +96,19 @@ const Dock = () => {
    */
   const toggleApp = (app: { id: string; canOpen: boolean }) => {
     if (!app.canOpen) return;
-    // TODO: 윈도우 열기 로직 구현 예정
+
+    // app.id가 유효한 WindowKey인지 확인
+    const windowKey = app.id as WindowKey;
+
+    const window = windows[windowKey];
+
+    if (window.isOpen) {
+      closeWindow(windowKey);
+    } else {
+      openWindow(windowKey);
+    }
+
+    // console.log(windows);
   };
 
   return (
